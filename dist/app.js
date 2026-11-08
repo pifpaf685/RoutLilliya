@@ -18,6 +18,12 @@ for (const [id,group] of [['pedicure-prices','Pediküre'],['manicure-prices','Ma
  });
  treatment.append(optgroup);
 }
+const mobileService = {name:'Mobile Pediküre',price:'ab 65 €',detail:'je nach Entfernung',group:'Pediküre'};
+const mobileIndex = services.push(mobileService)-1;
+const mobileOption = document.createElement('option');
+mobileOption.value = mobileIndex;
+mobileOption.textContent = 'Mobile Pediküre · ab 65 €';
+treatment.querySelector('optgroup').append(mobileOption);
 const bookingLink = document.querySelector('#email-booking');
 function updateBookingLink(){
  const service = treatment.value === '' ? null : services[Number(treatment.value)];
@@ -34,7 +40,7 @@ document.querySelector('[data-film]').addEventListener('click',()=> { filmDialog
 filmDialog.addEventListener('close',()=>video.pause());
 const legalDialog = document.querySelector('#legal-dialog');
 const legal = {
- impressum: {title:'Impressum',paragraphs:['Lilly Rout · Pediküre & Maniküre','Kontakt: 0660 7290640 · routliliya@gmail.com','Entwurfsfassung: Die vollständige Geschäftsanschrift und die Angaben zur Anbieterin werden vor der öffentlichen Freigabe ergänzt.']},
+ impressum: {title:'Impressum',paragraphs:['Lilly Rout · Pediküre & Maniküre','Kontakt: +43 660 7290640 · routliliya@gmail.com','Entwurfsfassung: Die vollständige Geschäftsanschrift und die Angaben zur Anbieterin werden vor der öffentlichen Freigabe ergänzt.']},
  datenschutz: {title:'Datenschutz',paragraphs:['Diese Website verwendet keine Analyse- oder Marketingdienste und setzt keine eigenen Tracking-Cookies. Das Video wird direkt auf dieser Website bereitgestellt.','Die Behandlungsauswahl wird nur in Ihrem Browser verarbeitet und nicht als Buchung übermittelt. Mit „Per E-Mail anfragen“ öffnet sich Ihr E-Mail-Programm. Erst wenn Sie die Nachricht dort selbst senden, wird sie übermittelt.','Der Instagram-Link führt zu einer externen Website. Beim bloßen Laden dieser Seite wird keine Verbindung zu Instagram aufgebaut.','Entwurfsfassung: Die vollständigen Datenschutzinformationen einschließlich Angaben zur Verantwortlichen und zum Hosting werden vor der öffentlichen Freigabe ergänzt.']}
 };
 document.querySelectorAll('[data-legal]').forEach(button=>button.addEventListener('click',()=>{ const item=legal[button.dataset.legal]; document.querySelector('#legal-title').textContent=item.title; const container=document.querySelector('#legal-copy'); container.replaceChildren(); item.paragraphs.forEach(text=>{const p=document.createElement('p');p.textContent=text;container.append(p)});legalDialog.showModal(); }));

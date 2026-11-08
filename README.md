@@ -16,7 +16,7 @@ python3 -m http.server 8080 --directory dist
 
 Тексти й прайс — у `dist/index.html`, стилі — у `dist/style.css`, мобільне меню, відео та підготовка листа для запису — у `dist/app.js`. Вибір послуги бере ціни з таблиць у HTML. `DESIGN.md` містить задум і нотатки з перевірки.
 
-Сайт доступний за адресою https://lilly-rout-pedicure.rva-jrec.workers.dev/. У версії від 8 листопада 2026 року всі 20 цін піднято рівно на 10 % від початкового прайсу, додано наданий користувачем портрет у контактний блок і вирівняно тон трьох фото через CSS. Публічні HTML, CSS та нове фото звірено байт у байт із локальними файлами. Перед просуванням потрібно підтвердити новий прайс, додати адресу та заповнити Impressum і Datenschutz. Для хостингу використовуйте вміст `dist/` як корінь сайту.
+Опублікована версія доступна на https://lillyrout.at/. У сайті відновлено 20 цін з оригінального прайсу `source-assets/originals/IMG_2086.PNG`, додано мобільний педикюр від 65 € залежно від відстані та уніфіковано контакти. Адресу й повні Impressum та Datenschutz досі потрібно заповнити. Для хостингу використовуйте вміст `dist/` як корінь сайту.
 
 ## Структура та публікація
 
@@ -24,18 +24,12 @@ python3 -m http.server 8080 --directory dist
 - `source-assets/originals/` — початкові фото й відео; `source-assets/unused-variants/` — варіанти зображень, які сайт зараз не використовує.
 - `archive/legacy-worker/wrangler.jsonc` — конфігурація попереднього Worker, збережена для довідки. Вона не повинна випадково розгортати новий репозиторій на старий Worker.
 
-Цільовий репозиторій — https://github.com/pifpaf685/RoutLilliya, цільовий домен — `lillyrout.at`. Підключення нового репозиторію до Cloudflare та домену перевіряйте окремо; наявність файлів у GitHub сама по собі не публікує сайт. Попередній репозиторій `pifpaf685/lilly-rout` і його Worker залишаються окремо; не змінюйте й не видаляйте їх автоматично. Не підключайте сайт до Worker або репозиторію Jonas. Юридичні дані, зазначені вище, поки не заповнені.
+Цільовий репозиторій — https://github.com/pifpaf685/RoutLilliya, домен — `lillyrout.at`. Попередній репозиторій `pifpaf685/lilly-rout` і його Worker залишаються окремо; не змінюйте й не видаляйте їх автоматично. Не підключайте сайт до Worker або репозиторію Jonas. Юридичні дані, зазначені вище, поки не заповнені.
 
-Станом на 8 листопада 2026 року файли цього проєкту перенесено в `RoutLilliya` (коміт `55ebabf`). Cloudflare Pages ще не підключено: застосунок **Cloudflare Pages** у GitHub має доступ лише до старого `lilly-rout`; у налаштуваннях його інсталяції треба додати `RoutLilliya`. Для Pages обрати гілку `main`, корінь репозиторію, порожню команду збірки та вихідну папку `dist`. Домен наразі показує паркувальну сторінку `atdomain.at` і використовує nameserver `ns1`–`ns4.hostdomains.net`; перед підключенням кореневого домену до Pages потрібна зона в Cloudflare та зміна nameserver у реєстратора. Не вважати домен запущеним, доки не перевірено HTTPS і вміст сайту на `lillyrout.at`.
+Сайт публікується через GitHub Pages із `dist/` після змін у гілці `main`. DNS домену обслуговує Cloudflare; HTTPS для відвідувачів працює через проксі Cloudflare. Окремий сертифікат GitHub Pages для домену ще не підтверджено, тому перед вимкненням проксі його потрібно перевірити. Локальні зміни не переходять на публічний сайт автоматично, доки їх не внесено в репозиторій та не виконано публікацію.
 
 ## Поточний напрямок
 
 Оновлена версія акцентує на уважній Fußpflege для особливих потреб: окремий блок показує конкретні послуги з прайсу та пояснює межу між доглядом і лікарською допомогою. Зображення `dist/assets/foot-care-detail-v2.jpg` — згенерована ілюстративна деталь за реальним робочим фото, а не документальний кадр процедури. В Австрії назву `medizinische Fußpflege` для звичайної Fußpflege вживати не слід; формулювання сайту це враховують.
 
 Головний портрет `dist/assets/lilly-rout-professional-bg.jpg` створено на основі наданого користувачем зображення із цифрово зміненим фоном. На сторінці це позначено біля фото. Початкове реальне фото `dist/assets/lilly-rout.jpg` і відео залишені без змін; новий фон не слід трактувати як документальне зображення фактичного приміщення.
-
-## GitHub Pages deployment
-
-The repository is public. `.github/workflows/pages.yml` publishes only `dist/` to GitHub Pages whenever these site files change on `main`. No build or dependencies are required. This supersedes the earlier Cloudflare Pages setup notes.
-
-The target custom domain remains `lillyrout.at`. Its Cloudflare DNS connection is pending verification; do not treat the custom domain as connected based on a successful GitHub deployment alone.
