@@ -38,12 +38,14 @@ test('fresh visit and rejection make no Google request and collect no clicks', (
   assert.equal(b.node('#consent-panel').hidden, false);
   b.click('tel:+436607290640'); b.reject(); b.click('mailto:test@example.com');
   assert.equal(b.scripts.length, 0);
+  assert.equal(b.window['ga-disable-G-HS9FHZEBMN'], true);
   assert.equal(b.window.dataLayer.filter(x => x.event).length, 0);
   assert.equal(JSON.parse(b.storage.get(key)).analytics, false);
 });
 test('consent loads GTM once and contact events contain no destination or treatment', () => {
   const b = browser(); b.accept(); b.accept();
   assert.equal(b.scripts.length, 1);
+  assert.equal(b.window['ga-disable-G-HS9FHZEBMN'], false);
   assert.match(b.scripts[0].src, /GTM-PP79W3P5$/);
   b.click('tel:+436607290640');
   b.click('mailto:private@example.com?body=medical-information', 'email-booking');
@@ -63,6 +65,7 @@ test('withdrawal clears Analytics cookies, stops events, and reloads libraries',
   b.click('tel:123');
   assert.equal(b.window.dataLayer.length, before);
   assert.equal(b.reloads, 1);
+  assert.equal(b.window['ga-disable-G-HS9FHZEBMN'], true);
   assert.ok(b.cookies.some(x => x.startsWith('_ga=; Max-Age=0')));
   assert.ok(b.cookies.some(x => x.startsWith('_ga_TEST=; Max-Age=0')));
   assert.ok(!b.cookies.some(x => x.startsWith('necessary=')));

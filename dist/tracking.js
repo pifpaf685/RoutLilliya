@@ -1,11 +1,13 @@
 (() => {
   'use strict';
   const CONTAINER = 'GTM-PP79W3P5';
+  const DISABLE = 'ga-disable-G-HS9FHZEBMN';
   const KEY = 'lillyrout.analytics-consent.v1';
   const MAX_AGE = 180 * 24 * 60 * 60 * 1000;
   const panel = document.querySelector('#consent-panel');
   let choice = null;
   let loaded = false;
+  window[DISABLE] = true;
   window.dataLayer = window.dataLayer || [];
   function gtag() { window.dataLayer.push(arguments); }
   gtag('consent', 'default', {
@@ -42,7 +44,9 @@
   }
   function activate() {
     if (loaded || choice !== true) return;
+    if (!['lillyrout.at', 'www.lillyrout.at'].includes(location.hostname)) return;
     loaded = true;
+    window[DISABLE] = false;
     gtag('consent', 'update', { analytics_storage: 'granted',
       ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
     window.dataLayer.push({ 'gtm.start': Date.now(), event: 'gtm.js' });
@@ -60,6 +64,7 @@
     panel.hidden = true;
     if (allowed) activate();
     else {
+      window[DISABLE] = true;
       gtag('consent', 'update', { analytics_storage: 'denied',
         ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
       clearCookies();
