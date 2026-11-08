@@ -33,3 +33,9 @@ python3 -m http.server 8080 --directory dist
 Оновлена версія акцентує на уважній Fußpflege для особливих потреб: окремий блок показує конкретні послуги з прайсу та пояснює межу між доглядом і лікарською допомогою. Зображення `dist/assets/foot-care-detail-v2.jpg` — згенерована ілюстративна деталь за реальним робочим фото, а не документальний кадр процедури. В Австрії назву `medizinische Fußpflege` для звичайної Fußpflege вживати не слід; формулювання сайту це враховують.
 
 Головний портрет `dist/assets/lilly-rout-professional-bg.jpg` створено на основі наданого користувачем зображення із цифрово зміненим фоном. На сторінці це позначено біля фото. Початкове реальне фото `dist/assets/lilly-rout.jpg` і відео залишені без змін; новий фон не слід трактувати як документальне зображення фактичного приміщення.
+
+## GitHub Pages deployment
+
+The repository is public. `.github/workflows/pages.yml` publishes only `dist/` to GitHub Pages whenever these site files change on `main`. No build or dependencies are required. This supersedes the earlier Cloudflare Pages setup notes.
+
+The target custom domain remains `lillyrout.at`. Its Cloudflare DNS connection is pending verification; do not treat the custom domain as connected based on a successful GitHub deployment alone.
