@@ -28,3 +28,15 @@
 .hero-note a{text-decoration:underline;text-underline-offset:3px}
 .mobile-care .text-link{display:block;width:max-content;max-width:100%}
 .mobile-care .text-link+.text-link{margin-top:12px}
+
+/* Consent controls follow the existing typography and colors. */
+.consent-panel{position:fixed;z-index:1000;inset:auto 20px 20px;margin:auto;max-width:650px;padding:24px;background:var(--paper,#f5f4ef);color:#25332a;border:1px solid #7c897f;box-shadow:0 8px 35px #0002;max-height:65dvh;overflow:auto}
+.consent-panel[hidden]{display:none}
+.consent-panel h2{font-size:24px;margin:0 0 12px;line-height:1.2}
+.consent-panel p{font-size:14px;line-height:1.55;margin:10px 0}
+.consent-panel [data-legal]{font:inherit;text-decoration:underline;background:none;border:0;color:inherit;padding:0;cursor:pointer}
+.consent-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.consent-actions button{font:inherit;font-size:14px;min-height:46px;padding:10px;border:1px solid currentColor;background:transparent;color:inherit;cursor:pointer}
+.consent-actions button:hover{background:#e4e8df}
+.consent-actions button:focus-visible,#privacy-settings:focus-visible{outline:3px solid #445d44;outline-offset:3px}
+@media(max-width:600px){.consent-panel{inset:auto 10px 10px;padding:18px}.consent-actions{gap:8px}}
