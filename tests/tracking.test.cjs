@@ -4,7 +4,7 @@ const vm = require('node:vm');
 const fs = require('node:fs');
 const source = fs.readFileSync(require('node:path').join(__dirname, '../dist/tracking.js'), 'utf8');
 const key = 'lillyrout.analytics-consent.v1';
-function browser(saved) {
+function browser(saved, href = 'https://lillyrout.at/?email=secret@example.com#private') {
   const nodes = new Map();
   const scripts = [], events = {}, cookies = [];
   const storage = new Map(saved === undefined ? [] : [[key, saved]]);
@@ -25,8 +25,8 @@ function browser(saved) {
   };
   const window = { addEventListener(name, fn) { events[name] = fn; } };
   const location = { origin: 'https://lillyrout.at', hostname: 'lillyrout.at',
-    pathname: '/', href: 'https://lillyrout.at/?email=secret@example.com#private', reload() { reloads++; } };
-  vm.runInNewContext(source, { window, document, location, URL, Date,
+    pathname: '/', href, reload() { reloads++; } };
+  vm.runInNewContext(source, { window, document, location, URL, URLSearchParams, Date,
     localStorage: { getItem: k => storage.get(k) || null, setItem: (k,v) => storage.set(k,v) } });
   return { window, scripts, storage, cookies, node, events, get reloads() { return reloads; },
     accept: () => node('#consent-accept').handlers.click(),
@@ -84,4 +84,32 @@ test('revoking consent in another tab stops tracking here', () => {
   const before=b.window.dataLayer.length;
   b.click('tel:123');
   assert.equal(b.window.dataLayer.length,before);
+});
+test('approved Search attribution survives without forwarding private query data', () => {
+  const b = browser(undefined, 'https://lillyrout.at/?utm_source=google&utm_medium=cpc' +
+    '&utm_campaign=lilly_rout_search&utm_id=24448387892&utm_content=123456789' +
+    '&gclid=private-click-id&utm_term=medical-information&email=secret@example.com#private');
+  const config = b.window.dataLayer.find(x => x[0] === 'set')[1];
+  assert.equal(config.page_location, 'https://lillyrout.at/?utm_source=google&utm_medium=cpc' +
+    '&utm_campaign=lilly_rout_search&utm_id=24448387892&utm_content=123456789');
+  assert.equal(b.scripts.length, 0);
+  b.accept();
+  assert.equal(b.scripts.length, 1);
+  const serialized = JSON.stringify(b.window.dataLayer);
+  for (const privateValue of ['private-click-id', 'medical-information', 'secret@example.com', '#private']) {
+    assert.ok(!serialized.includes(privateValue));
+  }
+});
+test('unapproved or malformed campaign data is not forwarded', () => {
+  for (const query of [
+    'utm_source=google&utm_medium=cpc&utm_campaign=private@example.com&utm_id=24448387892',
+    'utm_source=google&utm_medium=cpc&utm_campaign=lilly_rout_search&utm_id=other',
+    'utm_source=other&utm_medium=cpc&utm_campaign=lilly_rout_search&utm_id=24448387892'
+  ]) {
+    const b = browser(undefined, 'https://lillyrout.at/?' + query);
+    assert.equal(b.window.dataLayer.find(x => x[0] === 'set')[1].page_location, 'https://lillyrout.at/');
+  }
+  const b = browser(undefined, 'https://lillyrout.at/?utm_source=google&utm_medium=cpc' +
+    '&utm_campaign=lilly_rout_search&utm_id=24448387892&utm_content=medical-information');
+  assert.ok(!JSON.stringify(b.window.dataLayer).includes('medical-information'));
 });

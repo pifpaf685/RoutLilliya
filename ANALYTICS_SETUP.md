@@ -1,6 +1,14 @@
 # Lilly Rout — Analytics and Ads handoff
 
-Verified 2026-11-08.
+Analytics verified 2026-11-08. Ads draft updated 2026-11-09.
+
+## 2026-11-23 optimization
+
+- Campaign 24448387892: Maximize Clicks, verified maximum CPC bid limit EUR 0.80; budget remains EUR 15/day.
+- Campaign final URL suffix saved and reopened to verify: `utm_source=google&utm_medium=cpc&utm_campaign=lilly_rout_search&utm_id=24448387892&utm_content={adgroupid}`.
+- Tracking v2 preserves only these exact, approved source/medium/campaign/ID labels, plus a numeric ad-group ID, in the sanitized page_location. Arbitrary query values, medical search terms, click identifiers, and fragments are still excluded. Analytics loads only after consent; advertising permissions remain denied.
+- This enables manual paid-source classification for future consenting sessions. It does not retroactively reattribute visits or establish Google Ads click-ID conversion attribution. Contact clicks remain observation-only; a confirmed appointment still requires a separate verified result.
+- Seven tracking tests cover consent/rejection/withdrawal, attribution labels, and exclusion of private/unapproved query data.
 
 ## Production identity
 
@@ -43,11 +51,12 @@ Verified 2026-11-08.
 - Tag Assistant consent table after withdrawal showed analytics_storage, ad_storage, ad_user_data, ad_personalization all denied.
 - Phone-app launch was cancelled; no call was placed. No email was sent.
 
-## Ads work remaining
+## Google Ads draft and handoff
 
-- Ads UI remains at first-campaign business onboarding; company name and URL prepared. No campaign launched or budget committed.
-- Separate Google / generative-AI terms confirmation was requested before proceeding past the business screen.
-- User supplied practice address: Brandstätte 3/1 St/6, Wien. Published exactly with this unit notation.
-- Await daily advertising budget, advertising area, and mobile-service coverage.
-- Do not infer a confirmed booking from email or phone clicks, or start paid delivery without agreed budget and launch instruction.
+- First-campaign Search draft 10222045350. German ad copy and nine phrase/exact keywords for pedicure, foot care, and manicure in Vienna. Language targeting was not verified. Vienna only, with presence targeting. Display and Search Partners were disabled.
+- The campaign advertises appointments at Brandstätte 3/1 St/6, Wien, and phone inquiries. Home visits are outside campaign scope. Austrian phone asset added.
+- Maximize clicks with a custom average daily budget of EUR 15. Budget accepted and wizard advanced to billing. No paid delivery started.
+- Call asset schedule requested for 09:00–18:00 Vienna time. Days were unspecified, with daily proposed for the draft. Schedule was not saved or verified in onboarding. Configure and verify it in Assets > Call > Advanced options before delivery.
+- Billing form shows Austria and Austrian time. Confirm actual billing identity with the account owner. Submission requires separate Google Ads terms and shows a EUR 10 temporary card authorization. The form was left unsubmitted.
+- Paid attribution is unverified. Analytics contact clicks are observation-only and do not measure completed calls or confirmed appointments.
 - Full statutory business-owner details in Impressum remain incomplete; do not invent them.

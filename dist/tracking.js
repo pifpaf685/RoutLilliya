@@ -14,11 +14,26 @@
     analytics_storage: 'denied', ad_storage: 'denied',
     ad_user_data: 'denied', ad_personalization: 'denied'
   });
-  // Do not include query strings, fragments, or full referrer URLs in Analytics.
+  // Keep only the fixed, non-sensitive campaign labels used by our Search ads.
+  // Never forward arbitrary queries, click IDs, search terms, or medical details.
+  let pageLocation = location.origin + location.pathname;
+  try {
+    const incoming = new URL(location.href).searchParams;
+    if (incoming.get('utm_source') === 'google' &&
+        incoming.get('utm_medium') === 'cpc' &&
+        incoming.get('utm_campaign') === 'lilly_rout_search' &&
+        incoming.get('utm_id') === '24448387892') {
+      const safe = new URLSearchParams({ utm_source: 'google', utm_medium: 'cpc',
+        utm_campaign: 'lilly_rout_search', utm_id: '24448387892' });
+      const group = incoming.get('utm_content') || '';
+      if (/^\d{1,20}$/.test(group)) safe.set('utm_content', group);
+      pageLocation += '?' + safe.toString();
+    }
+  } catch {}
   let referrer = '';
   try { if (document.referrer) referrer = new URL(document.referrer).origin; } catch {}
   gtag('set', {
-    page_location: location.origin + location.pathname,
+    page_location: pageLocation,
     page_referrer: referrer,
     allow_google_signals: false,
     allow_ad_personalization_signals: false
