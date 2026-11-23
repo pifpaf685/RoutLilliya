@@ -9,6 +9,7 @@ Analytics verified 2026-11-08. Ads draft updated 2026-11-09.
 - Tracking v2 preserves only these exact, approved source/medium/campaign/ID labels, plus a numeric ad-group ID, in the sanitized page_location. Arbitrary query values, medical search terms, click identifiers, and fragments are still excluded. Analytics loads only after consent; advertising permissions remain denied.
 - This enables manual paid-source classification for future consenting sessions. It does not retroactively reattribute visits or establish Google Ads click-ID conversion attribution. Contact clicks remain observation-only; a confirmed appointment still requires a separate verified result.
 - Seven tracking tests cover consent/rejection/withdrawal, attribution labels, and exclusion of private/unapproved query data.
+- Publication verified: commit `ee30f64`, GitHub Pages run `45248900206` succeeded; production `tracking.js?v=2` SHA-256 matches local. Separate cabinet, mobile, and narrow 1010 manicure ad groups are saved; two old manicure keywords paused, six cabinet keywords added, eight routing negatives and ten campaign negatives saved. See `reports/2026-11-23-google-ads-changes.md` for the applied configuration and remaining measurement limits.
 
 ## Production identity
 
