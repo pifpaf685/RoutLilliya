@@ -40,3 +40,43 @@
 .consent-actions button:hover{background:#e4e8df}
 .consent-actions button:focus-visible,#privacy-settings:focus-visible{outline:3px solid #445d44;outline-offset:3px}
 @media(max-width:600px){.consent-panel{inset:auto 10px 10px;padding:18px}.consent-actions{gap:8px}}
+
+/* Keep the established sage/Georgia identity; make contact easier on small screens. */
+/* Layers: sticky header 20, mobile contact bar 30, consent panel 1000, native dialogs on top. */
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px;width:100%;align-items:center}
+.hero-actions .button{gap:12px;padding-inline:22px;white-space:nowrap}
+.button-outline{background:transparent;color:var(--ink);border:1px solid var(--accent)}
+.button-outline:hover{background:var(--sage);color:var(--ink)}
+.hero-details{margin-top:28px;font-size:16px;line-height:1.65}
+.hero-details a,.hero-note a{text-decoration:underline;text-underline-offset:4px}
+.hero-text .hero-note{margin-top:18px;max-width:36ch;font-size:14px}
+.booking-panel h3{font-size:30px;margin-bottom:26px}
+.booking-panel>.button{display:flex;width:100%;margin-top:12px;white-space:nowrap;padding-inline:16px}
+.booking-address{font-size:16px;color:var(--quiet)}
+.treatment-details{margin-top:30px;border-top:1px solid #b7c1b6;padding-top:20px}
+.treatment-details summary{cursor:pointer;font-size:15px;min-height:44px;padding:8px 0}
+.treatment-details[open] summary{margin-bottom:16px}
+.treatment-details summary:focus-visible{outline:3px solid var(--taupe);outline-offset:4px}
+.treatment-details .selection-info{min-height:0;padding-block:20px 0}
+.treatment-details .selection-info p:first-child{font-size:23px}
+.email-fallback{margin-top:24px;font-size:14px;color:var(--quiet)}
+.email-fallback .text-link{background:none;border:0;padding:8px 0;color:var(--ink);min-height:44px;font-size:14px;text-align:left}
+#email-copy-status{overflow-wrap:anywhere;font-size:14px;line-height:1.5}
+.mobile-contact-bar{display:none}
+@media(max-width:800px){
+ body{padding-bottom:calc(86px + env(safe-area-inset-bottom,0px))}
+ .intro-stage{display:flex;flex-direction:column;padding-top:0}
+ .reading-side{display:contents}
+ .hero-text{order:0;min-height:0;padding:34px 24px}
+ .portrait-stage{order:1;position:relative;top:auto;height:520px;min-height:0;width:100%}
+ .about-text{order:2;background:var(--white)}
+ .hero-text h1{font-size:clamp(43px,10.8vw,62px);max-width:13ch}
+ .hero-text .lead{margin-block:23px;font-size:16px;max-width:36ch}
+ .hero-details{margin-top:23px;font-size:15px}
+ .hero-actions{gap:10px}
+ .hero-actions .button{padding-inline:18px;flex:1 1 auto}
+ .mobile-contact-bar{display:grid;grid-template-columns:1fr 1fr;gap:10px;position:fixed;z-index:30;inset:auto 0 0;padding:12px max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));background:var(--paper);border-top:1px solid #b7c1b6}
+ .mobile-contact-bar .button{min-height:48px;white-space:nowrap;padding:12px 14px;font-size:14px}
+ body:has(#consent-panel:not([hidden])) .mobile-contact-bar{visibility:hidden}
+}
+@media(max-width:360px){.nav-wrap{gap:8px}.nav-book{font-size:12px;padding:11px 12px;white-space:nowrap}.hero-text h1{font-size:35px}.hero-actions{gap:8px}.hero-actions .button{padding-inline:14px;font-size:13px}.booking-call{font-size:13px}.mobile-contact-bar{gap:8px}.mobile-contact-bar .button{padding-inline:10px;font-size:13px}}

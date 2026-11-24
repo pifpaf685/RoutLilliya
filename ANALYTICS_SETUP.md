@@ -1,6 +1,21 @@
 # Lilly Rout — Analytics and Ads handoff
 
-Analytics verified 2026-11-08. Ads draft updated 2026-11-09.
+Current optimization: 2026-11-24. Historical setup notes below retain their original dates.
+
+## 2026-11-24 mobile contact and measurement
+
+- Campaign #1 remains paused at the owner's request. These website and measurement changes do not resume advertising.
+- Hero now shows 13 years of experience, the 1010 Vienna address, pedicure from EUR 50, home visits from EUR 65, and a direct telephone button. Mobile visitors have a persistent call / inquiry bar; it hides while the consent choice is open.
+- Booking is a personal inquiry by telephone or email. Treatment selection is optional and collapsed initially. A copy-email fallback supports visitors without a configured email application. No appointment is automatically booked.
+- Three existing photographs are delivered as WebP with unchanged framing. The original JPEGs remain available in the repository.
+- GTM version 3, `Lilly Rout - mobile contact and engagement`, published and verified on 2026-11-24. Exactly three changes: Contact clicks trigger updated, interaction_location data-layer variable added, and the existing GA4 event tag updated.
+- Trigger: `^(phone_click|email_click|instagram_click|booking_cta_click|prices_cta_click|email_copy_click|section_view)$`.
+- Each custom event includes only a fixed `interaction_location` label: header, hero, about, care, prices, home_visit, booking, faq, contact, footer, mobile_bar, or other. No selected treatment, message, contact destination, or form contents are sent.
+- GA4 event-scoped custom dimension `Interaction location` registered against `interaction_location` on 2026-11-24 and verified in the custom-definitions list. Future processed reports can use this dimension; it is not retroactive.
+- `section_view` fires once per page after at least half the prices, booking, or contact heading is visible, after consent. It measures heading visibility, not reading, heatmaps, or confirmed appointments.
+- New engagement events remain ordinary events, not Ads conversions or GA4 key events. Existing phone/email secondary observation conversions are unchanged.
+- Verification: eight Node tests; responsive browser checks at 320 / 390 / 768 / 1440 px; published GTM network requests verified for the correct measurement ID and fixed location labels. Analytics collection requests were intercepted locally so the QA interactions did not create customer leads. Consent rejection and withdrawal stop collection.
+- This adds future measurement only. It cannot reconstruct earlier clicks or establish that a telephone call was answered, an email sent, or an appointment confirmed.
 
 ## 2026-11-23 optimization
 
@@ -21,20 +36,20 @@ Analytics verified 2026-11-08. Ads draft updated 2026-11-09.
 - Web stream: 16299036851, Lilly Rout Website.
 - Measurement ID: G-HS9FHZEBMN.
 - GTM account: 6403499875; container: 285841165; ID: GTM-PP79W3P5.
-- GTM published version 2: Lilly Rout - consent-based analytics.
+- GTM published version 3: Lilly Rout - mobile contact and engagement.
 - Google Ads customer: 289-996-6392. Linked to this GA4 property; auto-tagging enabled; personalized ads disabled. Broad Ads-user editing access to GA was not enabled.
 
 ## Events and consent
 
 - GA4 base tag: Initialization - All Pages. Google Signals disabled.
 - GA4 event tag: GA4 - Contact clicks; uses built-in Event variable.
-- Custom event trigger: ^(phone_click|email_click|instagram_click)$.
-- Site pushes only event names; no phone number, email address, service choice, message contents, or link URL are included as event parameters.
+- Custom event trigger: `^(phone_click|email_click|instagram_click|booking_cta_click|prices_cta_click|email_copy_click|section_view)$`.
+- Site pushes event names and the fixed interaction_location label; no phone number, email address, service choice, message contents, or link URL are included as custom event parameters.
 - Automatic history, outbound-link, form, video, download, and scroll event collection disabled in GTM. GA enhanced measurement disabled. User-provided data and automatic personal-data detection disabled.
 - Basic consent: no Google library loaded before analytics consent. Analytics cookies cleared and page reloaded after withdrawal. ga-disable flag blocks Analytics after withdrawal. Local previews do not activate Google libraries.
 - Ad storage, ad user data, and ad personalization remain denied. Advertising consent and attribution need a separate review before a paid campaign launch; current consent UI is analytics-only.
 - Stored choice: lillyrout.analytics-consent.v1 in localStorage; expires after 180 days. Footer Cookie-Einstellungen opens the choice again.
-- page_location omits query and fragment; referrer includes origin only. Campaign query handling needs review before advertising to preserve approved attribution without transmitting personal data.
+- page_location omits fragments and arbitrary query data; only the fixed approved Search campaign labels and a numeric ad-group ID survive. Referrer includes origin only. Google Ads click-ID conversion attribution remains unverified.
 
 ## Goals / conversions
 

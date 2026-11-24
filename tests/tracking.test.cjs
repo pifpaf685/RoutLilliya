@@ -31,7 +31,7 @@ function browser(saved, href = 'https://lillyrout.at/?email=secret@example.com#p
   return { window, scripts, storage, cookies, node, events, get reloads() { return reloads; },
     accept: () => node('#consent-accept').handlers.click(),
     reject: () => node('#consent-reject').handlers.click(),
-    click(href, id = '') { events.click({ target: { closest: () => ({ id, getAttribute: () => href }) } }); } };
+    click(href, id = '', place) { events.click({ target: { closest: () => ({ id, dataset: {trackLocation:place}, getAttribute: () => href }) } }); } };
 }
 test('fresh visit and rejection make no Google request and collect no clicks', () => {
   const b = browser();
@@ -52,7 +52,7 @@ test('consent loads GTM once and contact events contain no destination or treatm
   b.click('https://www.instagram.com/rout_liliya/');
   b.click('#preise');
   const contact = b.window.dataLayer.filter(x => /_click$/.test(x.event || ''));
-  assert.deepEqual(JSON.parse(JSON.stringify(contact)), [{event:'phone_click'},{event:'email_click'},{event:'instagram_click'}]);
+  assert.deepEqual(JSON.parse(JSON.stringify(contact)), [{event:'phone_click',interaction_location:'other'},{event:'email_click',interaction_location:'other'},{event:'instagram_click',interaction_location:'other'},{event:'prices_cta_click',interaction_location:'other'}]);
   const serialized = JSON.stringify(b.window.dataLayer);
   assert.ok(!serialized.includes('secret@example.com'));
   assert.ok(!serialized.includes('medical-information'));
@@ -112,4 +112,21 @@ test('unapproved or malformed campaign data is not forwarded', () => {
   const b = browser(undefined, 'https://lillyrout.at/?utm_source=google&utm_medium=cpc' +
     '&utm_campaign=lilly_rout_search&utm_id=24448387892&utm_content=medical-information');
   assert.ok(!JSON.stringify(b.window.dataLayer).includes('medical-information'));
+});
+test('CTA and contact placement use fixed safe labels after consent only', () => {
+  const b=browser();
+  b.click('#termin','','hero');
+  assert.equal(b.window.dataLayer.filter(x=>x.event==='booking_cta_click').length,0);
+  b.accept();
+  b.click('#termin','','hero');
+  b.click('tel:123','','mobile_bar');
+  b.click('', 'copy-email', 'booking');
+  b.click('tel:123','','medical-information');
+  const interactions=b.window.dataLayer.filter(x=>x.interaction_location);
+  assert.deepEqual(JSON.parse(JSON.stringify(interactions)),[
+    {event:'booking_cta_click',interaction_location:'hero'},
+    {event:'phone_click',interaction_location:'mobile_bar'},
+    {event:'email_copy_click',interaction_location:'booking'},
+    {event:'phone_click',interaction_location:'other'}
+  ]);
 });

@@ -7,6 +7,9 @@
   const panel = document.querySelector('#consent-panel');
   let choice = null;
   let loaded = false;
+  let sectionObserver;
+  const seenSections = new Set();
+  const places = new Set(['header','hero','about','care','prices','home_visit','booking','faq','contact','footer','mobile_bar','other']);
   window[DISABLE] = true;
   window.dataLayer = window.dataLayer || [];
   function gtag() { window.dataLayer.push(arguments); }
@@ -57,6 +60,27 @@
       }
     }
   }
+  function emit(name, place) {
+    if (choice !== true) return;
+    window.dataLayer.push({ event: name, interaction_location: places.has(place) ? place : 'other' });
+  }
+  function observeSections() {
+    if (!window.IntersectionObserver) return;
+    sectionObserver?.disconnect();
+    sectionObserver = new window.IntersectionObserver(entries => {
+      if (choice !== true) return;
+      for (const entry of entries) {
+        if (!entry.isIntersecting || entry.intersectionRatio < 0.5) continue;
+        const id = entry.target.closest('section')?.id;
+        const place = { preise: 'prices', termin: 'booking', kontakt: 'contact' }[id];
+        if (!place || seenSections.has(place)) continue;
+        seenSections.add(place);
+        emit('section_view', place);
+        sectionObserver.unobserve(entry.target);
+      }
+    }, { threshold: 0.5 });
+    document.querySelectorAll('#preise h2,#termin h2,#kontakt h2').forEach(heading => sectionObserver.observe(heading));
+  }
   function activate() {
     if (loaded || choice !== true) return;
     if (!['lillyrout.at', 'www.lillyrout.at'].includes(location.hostname)) return;
@@ -69,6 +93,7 @@
     script.async = true;
     script.src = 'https://www.googletagmanager.com/gtm.js?id=' + CONTAINER;
     document.head.append(script);
+    observeSections();
   }
   function apply(allowed, persist) {
     const wasLoaded = loaded;
@@ -79,6 +104,7 @@
     panel.hidden = true;
     if (allowed) activate();
     else {
+      sectionObserver?.disconnect();
       window[DISABLE] = true;
       gtag('consent', 'update', { analytics_storage: 'denied',
         ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
@@ -95,18 +121,21 @@
   });
   document.addEventListener('click', event => {
     if (choice !== true) return;
-    const anchor = event.target.closest?.('a');
+    const anchor = event.target.closest?.('a,button');
     if (!anchor) return;
     const href = anchor.getAttribute('href') || '';
     let name;
-    if (href.startsWith('tel:')) name = 'phone_click';
+    if (anchor.id === 'copy-email') name = 'email_copy_click';
+    else if (href.startsWith('tel:')) name = 'phone_click';
     else if (anchor.id === 'email-booking' || href.startsWith('mailto:') ||
       href.startsWith('/cdn-cgi/l/email-protection')) name = 'email_click';
+    else if (href === '#termin') name = 'booking_cta_click';
+    else if (href === '#preise') name = 'prices_cta_click';
     else {
       try { if (new URL(href, location.href).hostname === 'www.instagram.com') name = 'instagram_click'; } catch {}
     }
     // Never send link text, destination, treatment, form values, or message body.
-    if (name) window.dataLayer.push({ event: name });
+    if (name) emit(name, anchor.dataset?.trackLocation);
   }, true);
   window.addEventListener('storage', event => {
     if (event.key !== KEY) return;
